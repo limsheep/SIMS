@@ -16,11 +16,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    login/loginDaoImpl.cpp \
+    login/loginServiceImpl.cpp \
     main.cpp \
     Login.cpp
 
 HEADERS += \
-    Login.h
+    Login.h \
+    STACODE.h \
+    gloable.h \
+    login/LoginDao.h \
+    login/loginDaoImpl.h \
+    login/loginService.h \
+    login/loginServiceImpl.h
 
 FORMS += \
     Login.ui
