@@ -3,7 +3,9 @@
 
 #include "gloable.h"
 
-
+/**
+ * @brief The LoginDaoImpl class 数据库访问业务接口实现
+ */
 class LoginDaoImpl : public LoginDao
 {
 public:

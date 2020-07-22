@@ -1,6 +1,9 @@
 #ifndef STACODE_H
 #define STACODE_H
 
+/**
+ * @brief The STACODE enum  状态码
+ */
 enum STACODE{
     SUCCESS,  //成功
     ACCT_UNEXIST,  //账号不存在

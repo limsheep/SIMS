@@ -164,6 +164,7 @@ void Login::on_Button_manaLogin_clicked()
 {
     QString acct = ui->lineEdit_manaJbn->text();
     QString pswd = ui->lineEdit_manaPwd->text();
+    //此处应该对密码进行加密处理，作为后续升级需求
     if(acct == NULL || pswd == NULL){
         QMessageBox::warning(this, "信息不完整", "请输入账号与密码", QMessageBox::Ok);
         return;
@@ -176,8 +177,10 @@ void Login::on_Button_manaLogin_clicked()
     }else if(status == ACCT_UNEXIST){
         QMessageBox::warning(this, "账号不存在", "请输入正确的账号", QMessageBox::Ok);
         return;
+    }else if(status != SUCCESS){
+        return;
     }
-    status = loginService->getMemberPswd(acct,pswd);
+    status = loginService->getMemberPswd(acct,pswd);  //获取密码
     if(status == PARAM_NULL){
         QMessageBox::warning(this, "信息不完整", "请输入密码", QMessageBox::Ok);
         return;
