@@ -11,6 +11,10 @@
 #include "./login/LoginDao.h"
 #include "./login/loginDaoImpl.h"
 
+#include "./register/registerService.h"
+#include "./register/registerServiceImpl.h"
+#include "./register/registerDao.h"
+#include "./register/registerDaoImpl.h"
 
 #include <QString>
 

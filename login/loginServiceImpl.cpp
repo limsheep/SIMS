@@ -21,10 +21,10 @@ STACODE LoginServiceImpl::checkMemberAcct(QString acct)
     }
     LoginDao *loginDao = new LoginDaoImpl();
     bool haveAcct = loginDao->checkMemberAcct(acct); //查询账号是否存在
-    if(!haveAcct){
-        staCode =  ACCT_UNEXIST;
+    if(haveAcct){
+        staCode =  SUCCESS;
     }else{
-        staCode = SUCCESS;
+        staCode = ACCT_UNEXIST;
     }
     delete loginDao;
     return staCode;

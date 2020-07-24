@@ -42,6 +42,29 @@ Login::Login(QWidget *parent)
     ui->lineEdit_manaresPwd->setEchoMode(QLineEdit::Password);
     ui->lineEdit_manaresSure->setEchoMode(QLineEdit::Password);
 
+    //打开数据库
+    connectDB();
+   // QSqlQuery query;
+    //添加数据库表
+    //query.exec("create table boss(id int primary key auto_increment, name varchar(255),  jobnumber varchar(10), password varchar(255), phone varchar(11))");
+    //query.exec("create table manager(id int primary key auto_increment, name varchar(255),  jobnumber varchar(10), password varchar(255), phone varchar(11))");
+}
+
+void Login::connectDB()
+{
+    //添加数据库
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    db.setHostName("127.0.0.1");
+    db.setUserName("root");
+    db.setPassword("123456");
+    db.setDatabaseName("supermarket");
+
+    //打开数据库
+    if(!db.open())
+    {
+        QMessageBox::warning(this, "数据库打开失败", db.lastError().text());
+        return;
+    }
 }
 
 Login::~Login()
@@ -113,52 +136,13 @@ void Login::on_Button_bossresReturn_clicked()
 /*管理员整体界面*/
 
 //管理员登录界面
+
 //按下管理员按钮
 void Login::on_Manager_clicked()
 {
     ui->stackedW->setCurrentWidget(ui->malogin);
     Login::on_Button_manaClear_clicked();
 }
-
-//管理员前往注册界面
-void Login::on_Button_manaToregist_clicked()
-{
-    ui->stackedW->setCurrentWidget(ui->maregist);
-    on_Button_manaresClear_clicked();
-}
-
-//清空管理员登录界面
-void Login::on_Button_manaClear_clicked()
-{
-    ui->lineEdit_manaJbn->clear();
-    ui->lineEdit_manaPwd->clear();
-}
-
-//返回主界面
-void Login::on_Button_manaReturn_clicked()
-{
-    ui->stackedW->setCurrentWidget(ui->welcome);
-}
-
-//管理员注册页面
-
-//清空管理员注册页面
-void Login::on_Button_manaresClear_clicked()
-{
-    ui->lineEdit_manaresJnb->clear();
-    ui->lineEdit_manaresName->clear();
-    ui->lineEdit_manaresPhone->clear();
-    ui->lineEdit_manaresPwd->clear();
-    ui->lineEdit_manaresSure->clear();
-}
-
-//返回管理员登录界面
-void Login::on_Button_manaresReturn_clicked()
-{
-    ui->stackedW->setCurrentWidget(ui->malogin);
-    on_Button_manaClear_clicked();
-}
-
 //管理员登录动作
 void Login::on_Button_manaLogin_clicked()
 {
@@ -190,5 +174,107 @@ void Login::on_Button_manaLogin_clicked()
     }else if(status == SUCCESS){
         QMessageBox::information(this,"登录","登录成功",QMessageBox::Ok);
         return;
+    }
+}
+//管理员前往注册界面
+void Login::on_Button_manaToregist_clicked()
+{
+    ui->stackedW->setCurrentWidget(ui->maregist);
+    on_Button_manaresClear_clicked();
+}
+//清空管理员登录界面
+void Login::on_Button_manaClear_clicked()
+{
+    ui->lineEdit_manaJbn->clear();
+    ui->lineEdit_manaPwd->clear();
+}
+
+//返回主界面
+void Login::on_Button_manaReturn_clicked()
+{
+    ui->stackedW->setCurrentWidget(ui->welcome);
+}
+
+//管理员注册页面
+
+//清空管理员注册页面
+void Login::on_Button_manaresClear_clicked()
+{
+    ui->lineEdit_manaresJnb->clear();
+    ui->lineEdit_manaresName->clear();
+    ui->lineEdit_manaresPhone->clear();
+    ui->lineEdit_manaresPwd->clear();
+    ui->lineEdit_manaresSure->clear();
+}
+
+//返回管理员登录界面
+void Login::on_Button_manaresReturn_clicked()
+{
+    ui->stackedW->setCurrentWidget(ui->malogin);
+    on_Button_manaClear_clicked();
+}
+//管理员注册动作
+void Login::on_Button_manaRegist_clicked()
+{
+    QString acct = ui->lineEdit_manaresJnb->text();
+    QString pswd = ui->lineEdit_manaresPwd->text();
+    QString phone = ui->lineEdit_manaresPhone->text();
+    QString surepswd = ui->lineEdit_manaresSure->text();
+    QString name = ui->lineEdit_manaresName->text();
+    //此处应该对密码进行加密处理，作为后续升级需求
+    if(acct == NULL || pswd == NULL || phone == NULL || surepswd == NULL || name == NULL){
+        QMessageBox::warning(this, "信息不完整", "请填写全部信息", QMessageBox::Ok);
+        return;
+    }
+    if(phone.length() != 11){ //判断号码的位数
+        QMessageBox::warning(this,"号码错误","请输入正确的电话号码！",QMessageBox::Yes);
+        ui->lineEdit_manaresPhone->clear();
+        return;
+    }
+    if(name == NULL){  //判断姓名为空
+        QMessageBox::warning(this,"姓名为空","请输入你的姓名！",QMessageBox::Yes);
+        ui->lineEdit_manaresName->clear();
+        return;
+    }
+    if(pswd.length() < 6){//密码严密性检测
+        QMessageBox::warning(this,"密码简单","请保证密码不少于6个字符",QMessageBox::Yes);
+        ui->lineEdit_manaresPwd ->clear();
+        ui->lineEdit_manaresSure->clear();
+        return;
+    }
+    if(pswd != surepswd){  //检验密码一致性
+        QMessageBox::warning(this,"warning","两次密码输入不一致");
+        ui->lineEdit_manaresSure->clear();
+        ui->lineEdit_manaresPwd->clear();
+        return;
+    }
+
+    RegisterService * registerservice = new RegisterServiceImpl();
+    STACODE status = registerservice->rescheckMemberAcct(acct, name);
+    if(status == ACCT_ALEXISTS){
+        QMessageBox::warning(this, "账号已存在", "账号已存在，可直接登录", QMessageBox::Ok);
+        return;
+    }
+    else if(status == PARAM_NULL){
+        QMessageBox::warning(this, "信息不完整", "信息不完整，请补全信息", QMessageBox::Ok);
+        return;
+    }
+    else if(status == NAME_ALEXISTS){
+        QMessageBox::warning(this,"error","您的姓名已经注册，请直接登陆", QMessageBox::Ok);
+        on_Button_manaresReturn_clicked();
+    }
+
+    else if(status == ACCT_UNEXIST){
+        bool res = registerservice->setMemberInfo(name, acct, pswd, phone);
+
+        if(!res){
+            QMessageBox::warning(this, "注册", "注册失败", QMessageBox::Ok);
+            on_Button_manaresClear_clicked();
+            return;
+        }else{
+            QMessageBox::information(this,"注册","注册成功",QMessageBox::Ok);
+            on_Button_manaresReturn_clicked();
+            return;
+        }
     }
 }

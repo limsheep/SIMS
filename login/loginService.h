@@ -10,7 +10,7 @@
 class LoginService
 { 
 public:
-    virtual ~LoginService(){}; //有虚函数的类需要添加虚析构函数
+    virtual ~LoginService(){} //有虚函数的类需要添加虚析构函数
 
 public:
     /**
