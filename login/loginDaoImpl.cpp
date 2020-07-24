@@ -1,4 +1,8 @@
 #include "loginDaoImpl.h"
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QVariant>
 
 LoginDaoImpl::LoginDaoImpl()
 {
@@ -12,9 +16,15 @@ LoginDaoImpl::LoginDaoImpl()
  */
 bool LoginDaoImpl::checkMemberAcct(QString acct)
 {
-    //TODO
-    //此处编写访问数据库函数
-    bool res = true;
+    bool res = false;
+    QSqlQuery query;
+    query.exec("select * from manager");
+    while(query.next()){
+        if(query.value("jobnumber") == acct){
+            res = true;
+        }
+    }
+
     return res;
 }
 
@@ -25,9 +35,13 @@ bool LoginDaoImpl::checkMemberAcct(QString acct)
  */
 QString LoginDaoImpl::getMemberPswd(QString acct)
 {
-    //TODO
-    //此处编写访问数据库的函数
-    QString in = acct;
-    QString pswd = "123456"; //仅用于测试
+    QSqlQuery query;
+    QString pswd;
+    query.exec("select * from manager");
+    while(query.next()){
+        if(query.value("jobnumber") == acct){
+            pswd = query.value("password").toString();
+        }
+    }
     return pswd;
 }

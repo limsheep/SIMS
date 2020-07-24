@@ -12,6 +12,7 @@ class Login : public QMainWindow
     Q_OBJECT
 
 public:
+    void connectDB();
     Login(QWidget *parent = nullptr);
     ~Login();
 
@@ -44,6 +45,8 @@ private slots:
     void on_Button_bossLogin_clicked();
 
     void on_Button_manaLogin_clicked();
+
+    void on_Button_manaRegist_clicked();
 
 private:
     Ui::Login *ui;

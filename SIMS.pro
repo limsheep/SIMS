@@ -19,7 +19,9 @@ SOURCES += \
     login/loginDaoImpl.cpp \
     login/loginServiceImpl.cpp \
     main.cpp \
-    Login.cpp
+    Login.cpp \
+    register/registerServiceImpl.cpp \
+    register/registerdaoImpl.cpp
 
 HEADERS += \
     Login.h \
@@ -28,7 +30,11 @@ HEADERS += \
     login/LoginDao.h \
     login/loginDaoImpl.h \
     login/loginService.h \
-    login/loginServiceImpl.h
+    login/loginServiceImpl.h \
+    register/registerService.h \
+    register/registerServiceImpl.h \
+    register/registerDao.h \
+    register/registerDaoImpl.h
 
 FORMS += \
     Login.ui
